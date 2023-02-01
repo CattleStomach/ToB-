@@ -133,6 +133,7 @@ export default {
     },
     // 删除按钮
     handleDelete (e) {
+      console.log(e, '查询e')
       this.$confirm('此操作将永久删除此条数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -140,7 +141,7 @@ export default {
       }).then(() => {
         // 删除
         this.tableData.forEach((item, index) => {
-          if (item.name === e.name) {
+          if (item.name === e.name && item.address === e.address) {
             this.tableData.splice(index, 1)
           }
         })
