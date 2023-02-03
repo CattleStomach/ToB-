@@ -64,14 +64,14 @@
 </template>
 
 <script>
-import { getData } from "@/api";
-import * as echarts from "echarts";
+import { getData } from "@/api"
+import * as echarts from "echarts"
 
 export default {
-  name: "",
+  name: "home",
   components: {},
   props: {},
-  data() {
+  data () {
     return {
       tableData: [],
       tableLabel: {
@@ -118,22 +118,22 @@ export default {
           color: "#5ab1ef",
         },
       ],
-    };
+    }
   },
-  created() {},
-  mounted() {
-    this.Graph();
+  created () { },
+  mounted () {
+    this.Graph()
   },
   watch: {},
   computed: {},
   methods: {
-    Graph() {
+    Graph () {
       getData().then(({ data }) => {
-        const { tableData, userData, videoData } = data.data;
-        this.tableData = tableData;
+        const { tableData, userData, videoData } = data.data
+        this.tableData = tableData
 
         //折线图
-        const brokenLineGraph = echarts.init(this.$refs.brokenLineGraph);
+        const brokenLineGraph = echarts.init(this.$refs.brokenLineGraph)
         const brokenLineGraphOption = {
           xAxis: {
             data: ["A", "B", "C", "D", "E"],
@@ -152,13 +152,13 @@ export default {
             },
           ],
           tooltip: {},
-        };
+        }
 
         // console.log(brokenLineGraphOption);
-        brokenLineGraph.setOption(brokenLineGraphOption);
+        brokenLineGraph.setOption(brokenLineGraphOption)
 
         //柱状图
-        const barGraph = echarts.init(this.$refs.barGraph);
+        const barGraph = echarts.init(this.$refs.barGraph)
         const barGraphOption = {
           legend: {
             //图例文字颜色
@@ -209,12 +209,12 @@ export default {
               type: "bar",
             },
           ],
-        };
+        }
         // console.log(barGraphOption);
-        barGraph.setOption(barGraphOption);
+        barGraph.setOption(barGraphOption)
 
         //饼状图
-        const pieGraph = echarts.init(this.$refs.pieGraph);
+        const pieGraph = echarts.init(this.$refs.pieGraph)
         const pieGraphOption = {
           tooltip: {
             trigger: "item",
@@ -234,10 +234,10 @@ export default {
               type: "pie",
             },
           ],
-        };
+        }
         // console.log(pieGraphOption);
-        pieGraph.setOption(pieGraphOption);
-      });
+        pieGraph.setOption(pieGraphOption)
+      })
     },
   },
 };

@@ -8,16 +8,25 @@ import PageOne from '@/views/PageOne'
 import PageTwo from '@/views/PageTwo'
 import Main from '@/views/Main'
 
+
 Vue.use(VueRouter)
 
-const routes = [{
+
+
+const routes = [
+  {
+    path: '/login',
+    component: () => import('@/views/login')
+  },
+  {
     path: '/',
     component: Main,
-    redirect: '/home', //重定向
+    // redirect: '/home', //重定向
     children: [
         //首页
         {
             path: 'home',
+            name: 'home',
             component: Home
         },
         //用户管理
@@ -41,10 +50,29 @@ const routes = [{
             component: PageTwo
         }
     ]
-}, ]
+  }, 
+]
 
 const router = new VueRouter({
     routes
 })
+
+// 路由守卫
+router.beforeEach((to, from, next) => {
+  // 判断是否登录
+  if (to.path === '/login') {
+    next()
+  }
+  else {
+    const token = localStorage.getItem('accessToken')
+    if (token) {
+      next()
+    }
+    else {
+      next('/login')
+    }
+  }
+})
+
 
 export default router
