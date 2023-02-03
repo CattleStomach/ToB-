@@ -8,6 +8,7 @@
     background-color="#545c64"
     text-color="#fff"
     active-text-color="#ffd04b"
+    :router="true"
   >
     <h3>{{ isCollapse ? "后台" : "后台管理系统" }}</h3>
     <el-menu-item
@@ -107,21 +108,21 @@ export default {
   },
   methods: {
     handleOpen(key, keyPath) {
-      console.log(key, keyPath);
+      // console.log(key, keyPath);
     },
     handleClose(key, keyPath) {
-      console.log(key, keyPath);
+      // console.log(key, keyPath);
     },
     //点击菜单跳转
     clickMenu(item) {
-      console.log(item);
-      // this.$router.push(item.path);
+      // console.log(item);
       if (
         this.$route.path !== item.path &&
         !(this.$route.path === "/home" && item.path === "/")
       ) {
         this.$router.push(item.path);
       }
+      this.$store.commit("selectMenu", item);
     },
   },
 };

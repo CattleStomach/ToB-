@@ -1,6 +1,6 @@
 <template>
   <el-row>
-    <el-col :span="8">
+    <el-col :span="8" style="padding-right: 10px">
       <el-card class="box-card">
         <div class="user">
           <img src="@/assets/DefaultAvatar.jpg" alt="" />
@@ -25,7 +25,7 @@
         </el-table>
       </el-card>
     </el-col>
-    <el-col :span="16">
+    <el-col :span="16" style="padding-left: 10px">
       <div class="num">
         <el-card
           v-for="item in countData"
@@ -43,56 +43,37 @@
           </div>
         </el-card>
       </div>
+      <div class="graph">
+        <!-- 折线图 -->
+        <el-card class="broken-line-graph">
+          <div ref="brokenLineGraph" style="height: 280px"></div>
+        </el-card>
+        <div class="bar-pie-graph">
+          <!-- 柱状图 -->
+          <el-card class="bar-graph">
+            <div ref="barGraph" style="height: 260px"></div>
+          </el-card>
+          <!-- 饼图 -->
+          <el-card class="pie-graph">
+            <div ref="pieGraph" style="height: 240px"></div>
+          </el-card>
+        </div>
+      </div>
     </el-col>
   </el-row>
 </template>
 
 <script>
 import { getData } from "@/api";
+import * as echarts from "echarts";
+
 export default {
   name: "",
   components: {},
   props: {},
   data() {
     return {
-      tableData: [
-        {
-          name: "OPPO",
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800,
-        },
-        {
-          name: "vivo",
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800,
-        },
-        {
-          name: "华为",
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800,
-        },
-        {
-          name: "小米",
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800,
-        },
-        {
-          name: "三星",
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800,
-        },
-        {
-          name: "魅族",
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800,
-        },
-      ],
+      tableData: [],
       tableLabel: {
         name: "品牌",
         todayBuy: "今日购买",
@@ -141,14 +122,124 @@ export default {
   },
   created() {},
   mounted() {
-    getData().then(({ data }) => {
-      
-      console.log(data);
-    });
+    this.Graph();
   },
   watch: {},
   computed: {},
-  methods: {},
+  methods: {
+    Graph() {
+      getData().then(({ data }) => {
+        const { tableData, userData, videoData } = data.data;
+        this.tableData = tableData;
+
+        //折线图
+        const brokenLineGraph = echarts.init(this.$refs.brokenLineGraph);
+        const brokenLineGraphOption = {
+          xAxis: {
+            data: ["A", "B", "C", "D", "E"],
+          },
+          yAxis: {},
+          series: [
+            {
+              data: [10, 22, 28, 43, 49],
+              type: "line",
+              stack: "x",
+            },
+            {
+              data: [5, 4, 3, 5, 10],
+              type: "line",
+              stack: "x",
+            },
+          ],
+          tooltip: {},
+        };
+
+        // console.log(brokenLineGraphOption);
+        brokenLineGraph.setOption(brokenLineGraphOption);
+
+        //柱状图
+        const barGraph = echarts.init(this.$refs.barGraph);
+        const barGraphOption = {
+          legend: {
+            //图例文字颜色
+            textStyle: {
+              color: "#333",
+            },
+          },
+          grid: {
+            left: "20%",
+          },
+          //提示框
+          tooltip: {
+            trigger: "axis",
+          },
+          xAxis: {
+            type: "category",
+            data: userData.map((item) => item.data),
+            axisLine: {
+              lineStyle: {
+                color: "#17b3a3",
+              },
+            },
+            axisLabel: {
+              interval: 0,
+              color: "#333",
+            },
+          },
+          yAxis: [
+            {
+              type: "value",
+              axisLine: {
+                lineStyle: {
+                  color: "#17b3a3",
+                },
+              },
+            },
+          ],
+          color: ["#2ec7c9", "#b6a2de"],
+          series: [
+            {
+              name: "新增用户",
+              data: userData.map((item) => item.new),
+              type: "bar",
+            },
+            {
+              name: "活跃用户",
+              data: userData.map((item) => item.active),
+              type: "bar",
+            },
+          ],
+        };
+        // console.log(barGraphOption);
+        barGraph.setOption(barGraphOption);
+
+        //饼状图
+        const pieGraph = echarts.init(this.$refs.pieGraph);
+        const pieGraphOption = {
+          tooltip: {
+            trigger: "item",
+          },
+          color: [
+            "#0f78f4",
+            "#dd536b",
+            "#9462e5",
+            "#a6a6a6",
+            "#e1bb22",
+            "#39c362",
+            "#3ed1cf",
+          ],
+          series: [
+            {
+              data: videoData,
+              type: "pie",
+            },
+          ],
+        };
+        // console.log(pieGraphOption);
+        pieGraph.setOption(pieGraphOption);
+      });
+    },
+  },
 };
 </script>
 
@@ -218,6 +309,20 @@ export default {
   .el-card {
     width: 32%;
     margin-bottom: 20px;
+  }
+}
+.graph {
+  .broken-line-graph {
+    height: 280px;
+  }
+  .bar-pie-graph {
+    display: flex;
+    justify-content: space-between;
+    height: 260px;
+    margin-top: 20px;
+    .el-card {
+      width: 48%;
+    }
   }
 }
 </style>

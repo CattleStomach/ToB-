@@ -7,6 +7,6 @@ Vue.use(Vuex)
 //创建实例
 export default new Vuex.Store({
     modules: {
-        tab
+        tab,
     }
 })
